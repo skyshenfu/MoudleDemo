@@ -1,0 +1,53 @@
+package com.test;
+
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.Okio;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+/**
+ * Created by zhangty on 2018/1/23.
+ */
+
+public class Main {
+    public static void main(String[] args) {
+
+        write();
+        //read();
+
+    }
+
+    private static void read() {
+        try {
+            BufferedSource source= Okio.buffer(Okio.source(new File("/Users/zhangty/Desktop/demos/VectorDemo/README.md")));
+            String str=source.readUtf8Line();
+            System.out.println(str);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void write() {
+        try {
+            //Okio.sink存在文件则覆盖 如果想要追加则使用Okio.appendingSink
+            BufferedSink sink=Okio.buffer(Okio.sink(new File("/Users/zhangty/Desktop/demos/VectorDemo/README1.md")));
+            //写一行文字
+            sink.writeString("测试文本",Charset.forName("utf-8"));
+            //把其他文件写进来
+            sink.writeAll(Okio.source(new File("/Users/zhangty/Desktop/demos/VectorDemo/README.md")));
+            //对于sink关闭操作是必须的
+            sink.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+}
